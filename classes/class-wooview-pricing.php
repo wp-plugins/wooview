@@ -61,7 +61,7 @@ class WooView_Pricing {
       $price = wc_trim_zeros( $price );
     }
     $return = sprintf( get_woocommerce_price_format(), $currency_symbol, $price );
-    return $return;
+    return html_entity_decode($return);
   }
   
 }
