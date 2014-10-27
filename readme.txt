@@ -6,13 +6,13 @@ Tags:              WooCommerce, WooView, WooMobile, woocommerce app, ecommerce, 
 Author URI:        http://www.bcslbrands.com
 Author:            BCSL Brands, LLC
 Requires at least: 3.5
-Tested up to:      3.8
-Stable tag:        1.0
-Version:           1.0
+Tested up to:      4.0
+Stable tag:        1.2.1
+Version:           1.2.1
 
 == Description ==
 
-WooView is the most convenient way to access your WooCommerce shop on the go. You will need to install our free Wordpress plugin on your site, that’s it. 
+WooView is the most convenient way to access your WooCommerce shop on the go. You will need to install our free Wordpress plugin on your site, thats it. 
 
 Then you will have access to detailed reports, native graphs, incoming orders and much more!
 
@@ -23,6 +23,9 @@ Then you will have access to detailed reports, native graphs, incoming orders an
 3. Download the 'WooView' iOS app from the Apple App Store
 
 == Changelog ==
+
+= 1.2.1 =
+* Fix compatibility issues with WooCommerce 2.2.0 
 
 = 1.0 =
 * Initial Release
