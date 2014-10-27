@@ -144,14 +144,12 @@ class WooView_Reporting {
     $query_params = $this->get_reporting_period_data($period_information);
     
     //Get Orders Totals
-    $valid_statuses = implode("','", apply_filters('woocommerce_reports_order_statuses', array('completed','processing','on-hold')) );
-    
-    //$query_params['date_range'] = '';
-    //$query_params['grouping'] = '';
+	  
+	  $valid_statuses = implode("','", array('wc-completed','completed','wc-processing','processing','wc-on-hold','on-hold'));
     
     $date_selection = ($period_information['type'] == 'today') ? "posts.post_date" : "DATE(posts.post_date)";
-    
-    $orders = $this->wpdb->get_results("SELECT {$date_selection} AS 'date',
+	  
+	  $searchString = "SELECT {$date_selection} AS 'date',
                                        sum(postmeta1.meta_value) AS 'total_amount',
                                        sum(postmeta2.meta_value) AS 'total_shipping',
                                        sum(postmeta3.meta_value) AS 'total_tax',
@@ -165,16 +163,24 @@ class WooView_Reporting {
                                        LEFT JOIN {$this->wpdb->prefix}term_relationships AS rel ON posts.ID=rel.object_ID
                                        LEFT JOIN {$this->wpdb->prefix}term_taxonomy AS tax USING(term_taxonomy_id)
                                        LEFT JOIN {$this->wpdb->prefix}terms AS term USING(term_id)
-                                       WHERE posts.post_type='shop_order'
-                                       AND tax.taxonomy	= 'shop_order_status'
-                                       AND term.slug IN ('{$valid_statuses}')
-                                       AND postmeta1.meta_key='_order_total'
+                                       WHERE posts.post_type='shop_order' ";
+	  
+	  if(version_compare( WOOCOMMERCE_VERSION, '2.2.0') >= 0 ) {
+		  $searchString .= "AND posts.post_status IN ('{$valid_statuses}') ";
+	  } else {
+		   $searchString .= "AND tax.taxonomy	= 'shop_order_status'
+		   					AND term.slug IN ('{$valid_statuses}') ";
+	  }
+	  
+	  $searchString .= "AND postmeta1.meta_key='_order_total'
                                        AND postmeta2.meta_key='_order_shipping'
                                        AND postmeta3.meta_key='_order_tax'
                                        AND postmeta4.meta_key='_order_discount'" .
                                        $query_params['date_range'] .
-                                       $query_params['grouping']);
-    
+                                       $query_params['grouping'];
+	  
+	  $orders = $this->wpdb->get_results($searchString);
+	  
     //Setup dates and date arrays
     $item_dates = array();
     $item_data = array();

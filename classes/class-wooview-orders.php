@@ -81,8 +81,17 @@ class WooView_Orders {
   * @return array 
   */
   public function get_all_order_statuses() {
-    $args = array('fields' => 'names', 'hide_empty' => 0);
-    return get_terms('shop_order_status', $args);
+	  
+	  if( version_compare( WOOCOMMERCE_VERSION, '2.2.0' ) >= 0 ) {
+			$wm_order_statuses = array();
+			$order_statuses_wc = wc_get_order_statuses();
+			foreach ($order_statuses_wc as $order_status_key_wc => $order_status_name_wc )
+				$wm_order_statuses[] = str_replace( 'wc-', '', $order_status_key_wc );
+			return $wm_order_statuses;
+		} else {
+			$args = array('fields' => 'names', 'hide_empty' => 0);
+    		return get_terms('shop_order_status', $args);
+		}	
   }
   
   
@@ -91,14 +100,13 @@ class WooView_Orders {
   * @param int $order_id 
   * @return string 
   */
-  private function get_order_status($order_id) {
-    $status = $this->wpdb->get_var("SELECT t.name AS status
-                                    FROM {$this->wpdb->terms} t,
-                                    {$this->wpdb->term_taxonomy} tt,
-                                    {$this->wpdb->term_relationships} tr
-                                    WHERE tr.object_id = $order_id
-                                    AND tt.taxonomy = 'shop_order_status' AND tt.term_id = t.term_id AND tr.term_taxonomy_id = tt.term_taxonomy_id;");
-    return $status;
+  public function get_order_status($order_id) {
+	  $order = new WC_Order($order_id);
+	  if( version_compare( WOOCOMMERCE_VERSION, '2.2.0' ) >= 0 ) {
+	    return wc_get_order_status_name( 'wc-'. $order->get_status() );
+	  } else {
+		return wc_get_order_status_name( $order->get_status() );
+	  }
   }
   
   
@@ -211,10 +219,6 @@ class WooView_Orders {
   */
   function update_order_status($id, $status) {
     $order = new WC_Order($id);
-    $all_statuses = $this->get_all_order_statuses();
-    if(!in_array($status, $all_statuses)) {
-      return false;
-    }
     $order->update_status($status);
     return $status;
   }
@@ -280,7 +284,7 @@ class WooView_Orders {
     
     //Filter if single order request
     if($id) {
-      $args['p'] = $id;
+      $args['include'] = $id;
     }
     
     //Filter orders by date range Date
@@ -313,7 +317,9 @@ class WooView_Orders {
       $order_data['date_display'] = date_i18n('m.d.y', strtotime($order_data['date_created']));
       $order_data['time_display'] = date_i18n('g:i a', strtotime($order_data['date_created']));
       $order_data['customer'] = get_post_meta( $order->ID, '_customer_user', true);
-      $order_data['status'] = $this->get_order_status($order->ID);
+		
+	  $order_data['status'] = $this->get_order_status($order->ID);
+		
       $order_data['first_name'] = get_post_meta( $order->ID, '_billing_first_name', true);
       $order_data['last_name'] = get_post_meta( $order->ID, '_billing_last_name', true);
       $order_data['total'] = get_post_meta( $order->ID, '_order_total', true);
@@ -322,6 +328,8 @@ class WooView_Orders {
       $order_data['payment_method'] = get_post_meta( $order->ID, '_payment_method_title', true );
       
       if($detailed) {
+		  
+		  
         $order_proxy = new WC_Order($order->ID);
         $order_data['customer_username'] = $this->customers_manager->get_order_customer_username($order->ID);
         $order_data['customer_details'] = ($order_data['customer_username'] != 'Guest') ? $this->customers_manager->get_customer_info($order_data['customer_username']) : false;

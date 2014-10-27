@@ -3,11 +3,11 @@
    Plugin Name: WooView
    Plugin URI: http://www.wooviewapp.com/
    Description: WooView enables you to access your WooCommerce store on the go using the WooView iPhone App
-   Version: 1.0.0
+   Version: 1.2.0
    Author: Joe Rucci
    Author URI: http://www.bcslbrands.com/
    Requires at least: 3.5
-   Tested up to: 3.8
+   Tested up to: 4.0
    License: GNU General Public License v3.0
    License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -24,7 +24,7 @@
   $GLOBALS['wooview_min_wp_version'] = '3.5';
   $GLOBALS['wooview_min_wc_version'] = '2.0';
   $GLOBALS['wooview_wc_active'] = is_woocommerce_active();
-  $GLOBALS['wooview_wv_version'] = '1.0';
+  $GLOBALS['wooview_wv_version'] = '1.2';
   $GLOBALS['wooview_wp_version'] = get_bloginfo('version');
   $GLOBALS['wooview_wc_version'] = ($GLOBALS['wooview_wc_active']) ? get_option('woocommerce_version') : '0.0';
   $GLOBALS['wooview_orders_default_limit'] = '25';
@@ -38,13 +38,10 @@
     class WooView_admin {
       public function __construct() {        
         if(is_admin()) {
-          add_action('admin_menu', array($this, 'wooview_add_menu_page'));
+          add_action('admin_menu', function() { add_menu_page('WooView', 'WooView', 'manage_options', 'wooview-admin', array(&$this, 'wooview_admin_page'), 'none'); });
           wp_register_style('wooview_style', plugins_url('css/style.css', __FILE__));
           wp_enqueue_style('wooview_style');
         }
-      }
-      function wooview_add_menu_page() {
-        add_menu_page('WooView', 'WooView', 'manage_options', 'wooview-admin', array(&$this, 'wooview_admin_page'), 'none');
       }
       function wooview_admin_page() {
         include('wooview-landing.php');
@@ -344,7 +341,7 @@
         
         
         function wooview_debug_page() {
-          
+		
         }
         
       }
