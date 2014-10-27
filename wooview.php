@@ -3,7 +3,7 @@
    Plugin Name: WooView
    Plugin URI: http://www.wooviewapp.com/
    Description: WooView enables you to access your WooCommerce store on the go using the WooView iPhone App
-   Version: 1.2.0
+   Version: 1.2.1
    Author: Joe Rucci
    Author URI: http://www.bcslbrands.com/
    Requires at least: 3.5

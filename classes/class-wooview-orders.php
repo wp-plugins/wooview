@@ -284,7 +284,7 @@ class WooView_Orders {
     
     //Filter if single order request
     if($id) {
-      $args['include'] = $id;
+      $args['post__in'] = array($id);
     }
     
     //Filter orders by date range Date
