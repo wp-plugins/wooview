@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
  * @author 	WooView
  * @package 	WooView/Classes
- * @version     1.0.0
+ * @version     1.2.2
  */
 
 class WooView_Orders {
@@ -318,7 +318,7 @@ class WooView_Orders {
       $order_data['time_display'] = date_i18n('g:i a', strtotime($order_data['date_created']));
       $order_data['customer'] = get_post_meta( $order->ID, '_customer_user', true);
 		
-	  $order_data['status'] = $this->get_order_status($order->ID);
+	  $order_data['status'] = strtolower($this->get_order_status($order->ID));
 		
       $order_data['first_name'] = get_post_meta( $order->ID, '_billing_first_name', true);
       $order_data['last_name'] = get_post_meta( $order->ID, '_billing_last_name', true);

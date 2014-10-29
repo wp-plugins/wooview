@@ -7,8 +7,8 @@ Author URI:        http://www.bcslbrands.com
 Author:            BCSL Brands, LLC
 Requires at least: 3.5
 Tested up to:      4.0
-Stable tag:        1.2.1
-Version:           1.2.1
+Stable tag:        1.2.2
+Version:           1.2.2
 
 == Description ==
 
@@ -20,9 +20,12 @@ Then you will have access to detailed reports, native graphs, incoming orders an
 
 1. Upload the 'wooview' folder to the '/wp-content/plugins/' directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Download the 'WooView' iOS app from the Apple App Store
+3. Download the 'WooView' iOS app from the Apple App Store, Free!
 
 == Changelog ==
+
+= 1.2.2 =
+* Fix compatibility more issuess with WooCommerce 2.2.8 
 
 = 1.2.1 =
 * Fix compatibility issues with WooCommerce 2.2.0 
