@@ -6,9 +6,9 @@ Tags:              WooCommerce, WooView, WooMobile, woocommerce app, ecommerce, 
 Author URI:        http://www.bcslbrands.com
 Author:            BCSL Brands, LLC
 Requires at least: 3.5
-Tested up to:      4.0
-Stable tag:        1.2.2
-Version:           1.2.2
+Tested up to:      4.2
+Stable tag:        1.2.4
+Version:           1.2.4
 
 == Description ==
 
@@ -24,8 +24,12 @@ Then you will have access to detailed reports, native graphs, incoming orders an
 
 == Changelog ==
 
+= 1.2.4 =
+* Fix compatibility more issues with WooCommerce 2.3 
+* Fix issue with today’s dashboard reporting
+
 = 1.2.2 =
-* Fix compatibility more issuess with WooCommerce 2.2.8 
+* Fix compatibility more issues with WooCommerce 2.2.8 
 
 = 1.2.1 =
 * Fix compatibility issues with WooCommerce 2.2.0 
