@@ -75,7 +75,7 @@ class WooView_Reporting {
         return array('date_range' => " AND DATE(posts.post_date) = DATE(NOW())", 'grouping' => " GROUP BY HOUR(posts.post_date)");
         break;
       case 'last_7_days':
-        $period_data['month_display'] = date_i18n('M', strtotime('last month'));
+        $period_data['month_display'] = date_i18n('M', strtotime('this month'));
         $period_data['days_in_period'] = 7;
         $period_data['date_cols'] = array();
         $timestamp = current_time('timestamp');
@@ -84,7 +84,7 @@ class WooView_Reporting {
           $period_data['date_cols'][] =  date_i18n('Y-m-d', $timestamp);
           $timestamp += (1 * $day_hours) * 3600;
         }
-        return array('date_range' => " AND (posts.post_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY))", 'grouping' => " GROUP BY DATE(posts.post_date)");
+        return array('date_range' => " AND (posts.post_date >= DATE_SUB(CURDATE(), INTERVAL 6 DAY))", 'grouping' => " GROUP BY DATE(posts.post_date)");
         break;
       case 'last_month':
         $period_data['year'] = date_i18n('Y');
@@ -153,16 +153,11 @@ class WooView_Reporting {
                                        sum(postmeta1.meta_value) AS 'total_amount',
                                        sum(postmeta2.meta_value) AS 'total_shipping',
                                        sum(postmeta3.meta_value) AS 'total_tax',
-                                       sum(postmeta4.meta_value) AS 'total_discount',
                                        COUNT(posts.ID) AS 'total_orders'
                                        FROM {$this->wpdb->prefix}posts as posts
                                        LEFT JOIN {$this->wpdb->prefix}postmeta as postmeta1 ON posts.ID=postmeta1.post_id
                                        LEFT JOIN {$this->wpdb->prefix}postmeta as postmeta2 ON posts.ID=postmeta2.post_id
                                        LEFT JOIN {$this->wpdb->prefix}postmeta as postmeta3 ON posts.ID=postmeta3.post_id
-                                       LEFT JOIN {$this->wpdb->prefix}postmeta as postmeta4 ON posts.ID=postmeta4.post_id
-                                       LEFT JOIN {$this->wpdb->prefix}term_relationships AS rel ON posts.ID=rel.object_ID
-                                       LEFT JOIN {$this->wpdb->prefix}term_taxonomy AS tax USING(term_taxonomy_id)
-                                       LEFT JOIN {$this->wpdb->prefix}terms AS term USING(term_id)
                                        WHERE posts.post_type='shop_order' ";
 	  
 	  if(version_compare( WOOCOMMERCE_VERSION, '2.2.0') >= 0 ) {
@@ -174,8 +169,7 @@ class WooView_Reporting {
 	  
 	  $searchString .= "AND postmeta1.meta_key='_order_total'
                                        AND postmeta2.meta_key='_order_shipping'
-                                       AND postmeta3.meta_key='_order_tax'
-                                       AND postmeta4.meta_key='_order_discount'" .
+                                       AND postmeta3.meta_key='_order_tax'" .
                                        $query_params['date_range'] .
                                        $query_params['grouping'];
 	  
@@ -191,7 +185,7 @@ class WooView_Reporting {
                                                               'total_shipping' => $item->total_shipping,
                                                               'total_tax' => $item->total_tax,
                                                               'total_orders' => $item->total_orders,
-                                                              'total_discount' => $item->total_discount);
+                                                              'total_discount' => 0);
       }
     } else if($period_information['type'] == 'today') {
       foreach($orders as $item) {
@@ -200,7 +194,7 @@ class WooView_Reporting {
                                                               'total_shipping' => $item->total_shipping,
                                                               'total_tax' => $item->total_tax,
                                                               'total_orders' => $item->total_orders,
-                                                              'total_discount' => $item->total_discount);
+                                                              'total_discount' => 0);
       }
     } else {
       foreach($orders as $item) {
@@ -209,7 +203,7 @@ class WooView_Reporting {
                                         'total_shipping' => $item->total_shipping,
                                         'total_tax' => $item->total_tax,
                                         'total_orders' => $item->total_orders,
-                                        'total_discount' => $item->total_discount);
+                                        'total_discount' => 0);
       }
     }
     
