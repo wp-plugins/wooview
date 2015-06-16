@@ -38,9 +38,12 @@ if (!class_exists('WooView_admin')) {
 		public function __construct() {        
 			if(is_admin()) {
 				add_action('admin_menu', array(&$this, 'wooview_add_admin_page') );
-				wp_register_style('wooview_style', plugins_url('css/style.css', __FILE__));
-				wp_enqueue_style('wooview_style');
+				add_action('admin_init', array(&$this, 'wooview_add_admin_style') );
 			}
+		}
+		function wooview_add_admin_style() {
+			wp_register_style('wooview_style', plugins_url('css/style.css', __FILE__));
+			wp_enqueue_style('wooview_style');
 		}
 		function wooview_add_admin_page() {
 			add_menu_page('WooView', 'WooView', 'manage_options', 'wooview-admin', array(&$this, 'wooview_admin_page'), 'none');
@@ -49,7 +52,7 @@ if (!class_exists('WooView_admin')) {
 			include('wooview-landing.php');
 		}
 	}
-	$GLOBALS['wooview_admin'] = new WooView_admin($minwp_version);
+	$GLOBALS['wooview_admin'] = new WooView_admin('3.5');
 }
 
 
